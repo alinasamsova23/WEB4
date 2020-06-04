@@ -1,128 +1,72 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-	<title>Web - 4</title>
-	<script type="text/javascript" nonce="a4cf56125c194b4892514fa3c22" src="//local.adguard.org?ts=1585150839147&amp;type=content-script&amp;dmn=u20236.kubsu-dev.ru&amp;css=1&amp;js=1&amp;gcss=1&amp;rel=1&amp;rji=1"></script>
-	<style>
-	   .error {
-            border: 2px solid red;
-        }
-	</style>
-<script type="text/javascript" nonce="a4cf56125c194b4892514fa3c22" src="//local.adguard.org?ts=1585150839147&amp;name=AdGuard%20Popup%20Blocker&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;type=user-script"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body class="bg-secondary">
-    <?php
-    if (!empty($messages)) {
-      print('<div id="messages">');
-      // Р’С‹РІРѕРґРёРј РІСЃРµ СЃРѕРѕР±С‰РµРЅРёСЏ.
-      foreach ($messages as $message) {
-        print($message);
-      }
-      print('</div>');
-    }
-    ?>
-	<div class="jumbotron w-50 mx-auto my-5">
-		<form action="" method="POST">
-			<div class="from-group d-flex flex-column">
-				<div class="my-2">
-					<label>Name</label>
-					<div class="col-sm-10">
-        				<input type="text" name="Name" class="form-control" <?php if ($errors['Name']) {print 'class="error"';} ?>  value=" <?php print $values['Name'];?> " />
-      				</div>
-      			</div>
-      			<div class="my-2">
-      				<label>E-mail</label>
-      				<div class="col-sm-10">
-        				<input type="email" class="form-control" name="Email" aria-describedby="emailHelp" <?php if ($errors['Email']) {print 'class="error"';} ?> value="<?php print $values['Email']; ?>" />
-      				</div>
-      			</div>
-      			<div class="my-2">
-      				<label>Date of Birth</label>
-      				<div class="d-flex flex-row justify-content-around">
-      					<div class="d-flex flex-column">
-      						<label>Day</label>
-      						<input type="text" class="form-control" name="DD" <?php if ($errors['DD']) {print 'class="error"';} ?> value="<?php print $values['DD']; ?>">
-      					</div>
-      					<div class="d-flex flex-column">
-      						<label>Month</label>
-      						<input type="text" class="form-control" name="DM" <?php if ($errors['DM']) {print 'class="error"';} ?> value="<?php print $values['DM']; ?>">
-      					</div>
-      					<div class="d-flex flex-column">
-      						<label>Year</label>
-      						<input type="number" class="form-control" name="DY" <?php if ($errors['DY']) {print 'class="error"';} ?> value="<?php print $values['DY']; ?>">
-      					</div>
-      				</div>
-      			</div>
-      			<div class="my-2">
-      				<label>Gender</label>
-      				<div class="form-check">
-        				<label class="form-check-label">
-          					<input type="radio" class="form-check-input" name="Rad" id="SMale" value="MALE" <?php if ($values['PO']=='MALE') print 'checked=""'; ?>>Male
-       					</label>
-      				</div>
-      				<div class="form-check">
-      					<label class="form-check-label">
-          					<input type="radio" class="form-check-input" name="Rad" id="SFe" value="FEMALE" <?php if ($values['PO']=='FEMALE') print 'checked=""'; ?>>Female
-        				</label>
-      				</div>
-      			</div>
-      			<div class="my-2">
-      				<label>Number of limbs</label>
-      				<div class="d-flex justify-content-between">
-	      				<div class="form-check">
-	        				<label class="form-check-label">
-	          					<input type="radio" class="form-check-input" name="Limbs" id="0" value="0" <?php if ($values['LI']=='0') print 'checked=""'; ?>>0
-	       					</label>
-	      				</div>
-	      				<div class="form-check">
-	      					<label class="form-check-label">
-	          					<input type="radio" class="form-check-input" name="Limbs" id="1" value="1" <?php if ($values['LI']=='1') print 'checked=""'; ?>>1
-	        				</label>
-	      				</div>
-	      				<div class="form-check">
-	      					<label class="form-check-label">
-	          					<input type="radio" class="form-check-input" name="Limbs" id="2" value="2" <?php if ($values['LI']=='2') print 'checked=""'; ?>>2
-	        				</label>
-	      				</div>
-	      				<div class="form-check">
-	      					<label class="form-check-label">
-	          					<input type="radio" class="form-check-input" name="Limbs" id="3" value="3" <?php if ($values['LI']=='3') print 'checked=""'; ?>>3
-	        				</label>
-	      				</div>
-	      				<div class="form-check">
-	      					<label class="form-check-label">
-	          					<input type="radio" class="form-check-input" name="Limbs" id="4" value="4" <?php if ($values['LI']=='4') print 'checked=""'; ?>>4
-	        				</label>
-	      				</div>
-	      			</div>
-      			</div>
-      			<div class="my-2 jumbotron p-1" <?php if ($errors['SP']) {print 'class="error"';} ?>>
-      				<div class="form-group" value="">
-      					<label for="exampleSelect2">Superpowers</label>
-      					<select multiple="" class="form-control" name="SP[]">
-        				<option <?php for ($i=0;$i<count($values, COUNT_RECURSIVE)-10;$i++) if ($values['SP'][$i]=='Time freeze') print 'selected=""' ?>>Time freeze</option>
-                		<option <?php for ($i=0;$i<count($values, COUNT_RECURSIVE)-10;$i++) if ($values['SP'][$i]=='Teleportation') print 'selected=""' ?>>Teleportation</option>
-                		<option <?php for ($i=0;$i<count($values, COUNT_RECURSIVE)-10;$i++) if ($values['SP'][$i]=='Absolute knowledge') print 'selected=""' ?>>Absolute knowledge</option>
-                		<option <?php for ($i=0;$i<count($values, COUNT_RECURSIVE)-10;$i++) if ($values['SP'][$i]=='Fundamental immortality') print 'selected=""' ?>>Fundamental immortality</option>
-				      </select>
-				    </div>
-      			</div>
-      			<div class="my-2">
-      				<div class="form-group">
-      					<label>Biography</label>
-      					<textarea class="form-control" name="BG" rows="3" <?php if ($errors['BG']) {print 'class="error"';} ?>><?php print $values['BG']; ?></textarea>
-    				</div>	
-      			</div>
-      			<div class="my-2 <?php if ($errors['CH']) {print 'class="error"';} ?>">
-      				<div class="form-check">
-        				<label><input class="form-check-input" type="checkbox" name="CH" <?php if ($errors['CH']) {print 'class="error"';} ?>  value="Yes" <?php print $values['CH']; ?>>I got acquainted with the contact
-        				</label>
-      				</div>
-      			</div>
-      			<button type="submit" class="btn btn-dark">Send</button>
-			</div>
-		</form>
-	</div>
-</body>
-</html>
+<div class="row justify-content-md-center p-2">
+    <form method="POST" class="col-12 col-md-6 align-self-center jumbotron p-4">
+    <h1 class="text-center">Форма</h1>
+    <div class="form-group">
+      <input type="name" placeholder="Имя" name="name" class="form-control <?php if($errors['name']){echo 'border border-danger';} ?>" value="<?php echo $values['name']; ?>"><br>
+      <input type="email" placeholder="Email" name="email" class="form-control <?php if($errors['email']){echo 'border border-danger';} ?>" value="<?php echo $values['email']; ?>"><br>
+      <input type="number" placeholder="Год рождения" name="year" class="form-control <?php if($errors['year']){echo 'border border-danger';} ?>" value="<?php echo $values['year']; ?>"><br>
+      </div>
+      <h6>Пол</h6>
+       <div class="form-group row col-6 justify-content-between">
+      <div class="form-check">
+      <label class="form-check-lable" for="gender">
+        <input type="radio" value=0 name="gender" id="gender" class="form-check-input" <?php if(!$values['gender']){echo 'checked';}?>>
+        М.
+      </label>
+      </div>
+      <div class="form-check">
+      <label class="form-check-lable" for="gender">
+        <input type="radio" value=1 name="gender" id="gender" class="form-check-input" <?php if($values['gender']){echo 'checked';}?>>
+        Ж.
+      </label><br>
+      </div>
+      </div>
+      <h6>Количество конечностей</h6>
+      <div class="form-group row col-12 justify-content-between">
+      	<div class="form-check">
+      <input type="radio" value=1 name="limb" class="form-check-input" <?php if($values['limb']==1){echo 'checked';}?>>
+        <label for="one" class="form-check-label">1</label>
+        </div>
+        <div class="form-check">
+      <input type="radio" value=2 name="limb" class="form-check-input" <?php if($values['limb']==2){echo 'checked';}?>>
+        <label for="two" class="form-check-label">2</label>
+        </div>
+        <div class="form-check">
+      <input type="radio" value=3 name="limb" class="form-check-input" <?php if($values['limb']==3){echo 'checked';}?>>
+        <label for="three" class="form-check-label">3</label>
+        </div>
+        <div class="form-check">
+      <input type="radio" value=4 name="limb" class="form-check-input" <?php if($values['limb']==4){echo 'checked';}?>>
+        <label for="four" class="form-check-label">4</label>
+        </div>
+        </div>
+        <h6>Сверхспособности</h6>
+        <div class="form-group">
+      <select multiple name="superpowers[]" class="form-control">
+       <?php 
+            $superpowers = unserialize($values['superpowers']);
+            if(!$superpowers) $superpowers = array();
+       ?>
+        <option value=1 <?php if(in_array(1, $superpowers)) echo 'selected'; ?>>Бессмертие</option>
+        <option value=2 <?php if(in_array(2, $superpowers)) echo 'selected'; ?>>Прохождение сквозь стены</option>
+        <option value=3 <?php if(in_array(3, $superpowers)) echo 'selected'; ?>>Левитация</option>
+      </select>
+      <br>
+      </div>
+      <h6>Биография</h6>
+      <div class="form-group">
+      <textarea name="bio" class="form-control <?php if($errors['bio']){echo 'border border-danger';} ?>">
+      <?php echo $values['bio']; ?>
+      </textarea>
+      <br>
+      <div class="form-check"
+      <label for="agreed" class="form-check-label">
+        <input type="checkbox" name="agreed" id="agreed" class="form-check-input" required>
+        с контрактом ознакомлен
+      </label>
+      </div>
+      <br>
+      <input type="submit" value="Отправить" class="form-control">
+      </div>
+    </form>
+</div>
