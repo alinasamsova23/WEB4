@@ -1,189 +1,255 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
+?>
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <title>Форма</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"
+        integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+</head>
+<body class="container">
+
+<?php
+$ability_labels = [1 => 'Бессмертие', 3=> 'Левитация', 2 => 'Прохождение сквозь стены'];
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    
-    $messages = array();
-    
-    if (!empty($_COOKIE['save'])) {
-        setcookie('save','',100000);
-        
-        echo '<div class="jumbotron w-25 p-4 mx-auto bg-info my-2">Saved</div>';
-    }
-    $errors = array();
-    $errors['Name'] = !empty($_COOKIE['Name_error']);
-    $errors['Email'] = !empty($_COOKIE['Email_error']);
-    $errors['DD'] = !empty($_COOKIE['DD_error']);
-    $errors['DM'] = !empty($_COOKIE['DM_error']);
-    $errors['DY'] = !empty($_COOKIE['DY_error']);
-    $errors['SP'] = !empty($_COOKIE['SP_error']);
-    $errors['BG'] = !empty($_COOKIE['BG_error']);
-    $errors['CH'] = !empty($_COOKIE['CH_error']);
-    
-    
-    if ($errors['Name']) {
-        setcookie('Name_error', '', 100000);
-        $messages[] = '<div class="error">Enter NAME</div>';
-    }
-    $values = array();
-    $values['Name'] = empty($_COOKIE['Name_value']) ? '' : $_COOKIE['Name_value'];
-    
-    if ($errors['Email']) {
-        setcookie('Email_error', '', 100000);
-        $messages[] = '<div class="error">Enter email.</div>';
-    }
-    $values['Email'] = empty($_COOKIE['Email_value']) ? '' : $_COOKIE['Email_value'];
-    
-    if ($errors['BG']) {
-        setcookie('BG_error', '', 100000);
-        $messages[] = '<div class="error">Enter day.</div>';
-    }
-    $values['BG'] = empty($_COOKIE['BG_value']) ? '' : $_COOKIE['BG_value'];
-    
-    if ($errors['DD']) {
-        setcookie('DD_error', '', 100000);
-        $messages[] = '<div class="error">Enter day.</div>';
-    }
-    $values['DD'] = empty($_COOKIE['DD_value']) ? '' : $_COOKIE['DD_value'];
-    
-    if ($errors['DM']) {
-        setcookie('DM_error', '', 100000);
-        $messages[] = '<div class="error">Enter month.</div>';
-    }
-    $values['DM'] = empty($_COOKIE['DM_value']) ? '' : $_COOKIE['DM_value'];
-    
-    if ($errors['DY']) {
-        setcookie('DY_error', '', 100000);
-        $messages[] = '<div class="error">Enter year.</div>';
-    }
-    $values['DY'] = empty($_COOKIE['DY_value']) ? '' : $_COOKIE['DY_value'];
-    
-    if ($errors['SP']){
-        setcookie('SP_error', '', 100000);
-        $messages[] = '<div class="error">Enter superpower.</div>';
-    }
-    $values['SP']=array();
-    if (key_exists("SP_value",$_COOKIE)) $values['SP'] = unserialize($_COOKIE['SP_value'], ["allowed_classes" => false]);
-    
-    if ($errors['BG']) {
-        setcookie('BG_error', '', 100000);.
-        $messages[] = '<div class="error">Enter biography.</div>';
-    }
-    $values['BG'] = empty($_COOKIE['BG_value']) ? '' : $_COOKIE['BG_value'];
-    
-    if ($errors['CH']) {
-        setcookie('CH_error', '', 100000);
-        $messages[] = '<div class="error">Enter contract.</div>';
-    }
-    $values['CH'] = empty($_COOKIE['CH_value']) ? '' : $_COOKIE['CH_value'];
-    
-    if (key_exists("PO_value",$_COOKIE)) $values['PO'] = $_COOKIE['PO_value']; else $values['PO'] = "MALE";
-    if (key_exists("LI_value",$_COOKIE)) $values['LI'] = $_COOKIE['LI_value']; else $values['LI'] = "0";
-    
-    include('form.php');
+  $messages = array();
+
+  // В суперглобальном массиве $_COOKIE PHP хранит все имена и значения куки текущего запроса.
+  // Выдаем сообщение об успешном сохранении.
+  if (!empty($_COOKIE['save'])) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('save', '', 100000);
+    // Если есть параметр save, то выводим сообщение пользователю.
+    $messages[] = '<div class="row justify-content-md-center p-4">Спасибо, результаты сохранены.<br></div>';
+  }
+  
+  $errors = array();
+  $errors['name'] = !empty($_COOKIE['name_error']);
+  $errors['email'] = !empty($_COOKIE['email_error']);
+  $errors['year'] = !empty($_COOKIE['year_error']);
+  $errors['gender'] = !empty($_COOKIE['gender_error']);
+  $errors['bodyparts'] = !empty($_COOKIE['bodyparts_error']);
+  $errors['powers'] = !empty($_COOKIE['powers_error']);
+  $errors['bio'] = !empty($_COOKIE['bio_error']);
+  $errors['agreed'] = !empty($_COOKIE['agreed_error']);
+  
+  if ($errors['name']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('name_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Имя может содержать только русские буквы.</div><br>';
+  }
+  if ($errors['email']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('email_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Неверно указан Email</div><br>';
+  }
+  if ($errors['year']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('year_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Неверно заполнен год.</div><br>';
+  }
+  if ($errors['gender']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('gender_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Укажите пол.</div><br>';
+  }
+  if ($errors['bodyparts']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('bodyparts_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Укажите число конечностей.</div><br>';
+  }
+  if ($errors['powers']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('powers_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Выберите способности.</div><br>';
+  }
+  if ($errors['bio']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('bio_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Заполните биографию.</div><br>';
+  }
+  if ($errors['agreed']) {
+    // Удаляем куку, указывая время устаревания в прошлом.
+    setcookie('agreed_error', '', 100000);
+    // Выводим сообщение.
+    $messages[] = '<div class="alert alert-danger" role="alert">Вы не согласились с контрактом.</div><br>';
+  }
+  
+  $values = array();
+  $values['name'] = empty($_COOKIE['name_value']) ? '' : $_COOKIE['name_value'];
+  $values['email'] = empty($_COOKIE['email_value']) ? '' : $_COOKIE['email_value'];
+  $values['year'] = empty($_COOKIE['year_value']) ? '' : $_COOKIE['year_value'];
+  $values['gender'] = empty($_COOKIE['gender_value']) ? '' : $_COOKIE['gender_value'];
+  $values['bodyparts'] = empty($_COOKIE['bodyparts_value']) ? '' : $_COOKIE['bodyparts_value'];
+  $values['powers'] = empty($_COOKIE['powers_value']) ? '' : $_COOKIE['powers_value'];
+  $values['bio'] = empty($_COOKIE['bio_value']) ? '' : $_COOKIE['bio_value'];
+  $values['agreed'] = empty($_COOKIE['agreed_value']) ? '' : $_COOKIE['agreed_value'];
+    if (!empty($messages)) {
+        print('<div class="row justify-content-md-center p-4">');
+  // Выводим все сообщения.
+       print('<div class="col-12 col-md-6 p-4">');
+  foreach ($messages as $message) {
+    print($message);
+  }
+  print('</div>');
+  print('</div>');
 }
-else {
-    $errors = FALSE;
-    if (empty($_POST['Name'])) {
-        setcookie('Name_error', '1', time() + 24 * 60 * 60);
-        $errors = TRUE;
-    } else
-        if (!ctype_alpha($_POST['Name'])) {
-            setcookie('Name_error', '2', time() + 24 * 60 * 60);
-            $errors = TRUE;
-        }
-    else {
-        setcookie('Name_value', $_POST['Name'], time() + 30 * 24 * 60 * 60);
+  include('form.php');
+  exit();
+}else{
+
+$errors = array();
+
+?>
+<div class="row justify-content-md-center p-4">
+<div class="col-12 col-md-6 jumbotron">
+<?php
+if (empty($_POST['name'])) {
+  setcookie('name_error', '1', time() + 24 * 60 * 60);
+  $errors = TRUE;
+}
+else if (!preg_match('/^[а-яА-Я ]+$/u', $_POST['name'])) {
+  setcookie('name_error', '1', time() + 24 * 60 * 60);
+  $errors = TRUE;
+}else {
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('name_value', $_POST['name'], time() + 30 * 24 * 60 * 60);
+  }
+if (empty($_POST['bio'])){
+    setcookie('bio_error', '1', time() + 24 * 60 * 60);
+
+    $errors = TRUE;
+}else {
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('bio_value', $_POST['bio'], time() + 30 * 24 * 60 * 60);
+  }
+if (empty($_POST['year'])) {
+    setcookie('year_error', '1', time() + 24 * 60 * 60);
+
+    $errors = TRUE;
+}
+else if (!(is_numeric($_POST['year']) && intval($_POST['year']) >= 1900 && intval($_POST['year']) <= 2020)) {
+    setcookie('year_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}else {
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('year_value', $_POST['year'], time() + 30 * 24 * 60 * 60);
+  }
+
+$ability_data = array_keys($ability_labels);
+if (empty($_POST['powers'])) {
+    setcookie('powers_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}
+else{
+  $abilities = $_POST['powers'];
+  foreach ($abilities as $ability) {
+    if (!in_array($ability, $ability_data)) {
+      setcookie('powers_error', '1', time() + 24 * 60 * 60);
+      $errors = TRUE;
     }
-    if (empty($_POST['Email'])) {
-        setcookie('Email_error', '1', time() + 24 * 60 * 60);
-        $errors = TRUE;
-    } else if (!preg_match("/^[a-zA-Z0-9_\-.]+@[a-z]/", $_POST['Email'])){
-        setcookie('Email_error', '2', time() + 24 * 60 * 60);
-        $errors = TRUE;
-    } else {
-        setcookie('Email_value', $_POST['Email'], time() + 30 * 24 * 60 * 60);
-    }
-    if (empty($_POST['DD']) or empty($_POST['DM']) or empty($_POST['DY'])) {
-        setcookie('DY_error', '1', time() + 24 * 60 * 60);
-        setcookie('DM_error', '1', time() + 24 * 60 * 60);
-        setcookie('DY_error', '1', time() + 24 * 60 * 60);
-        $errors = TRUE;
-    } else if (!ctype_digit($_POST['DD']) or !ctype_digit($_POST['DM']) or !ctype_digit($_POST['DY']))
-    {
-        setcookie('DD_error', '2', time() + 24 * 60 * 60);
-        setcookie('DM_error', '2', time() + 24 * 60 * 60);
-        setcookie('DY_error', '2', time() + 24 * 60 * 60);
-        $errors = TRUE;
-    } else {
-        setcookie('DD_value', $_POST['DD'], time() + 30 * 24 * 60 * 60);
-        setcookie('DM_value', $_POST['DM'], time() + 30 * 24 * 60 * 60);
-        setcookie('DY_value', $_POST['DY'], time() + 30 * 24 * 60 * 60);
-    }
-    if (count($_POST['SP'])==0) {
-        setcookie('SP_error','1',time() + 24*60*60);
-        $errors = TRUE;
-    }
-    if (empty($_POST['BG'])) {
-        setcookie('BG_error','1',time() + 24*60*60);
-        $errors = TRUE;
-    }
-    else{
-        setcookie('BG_value', $_POST['BG'], time() + 30 * 24 * 60 * 60);
-    }
-    if(isset($_POST['CH']) &&
-        $_POST['CH'] == 'Yes')
-    {
-        $ch='OZNACOMLEN';
-        setcookie('CH_value', 'checked=""', time() + 30 * 24 * 60 * 60);
-    }
-    else
-    {
-        setcookie('CH_value', '', time() + 30 * 24 * 60 * 60);
-        setcookie('CH_error', '1', time() + 24 * 60 * 60);
-        $errors = TRUE;
-    }
-    setcookie('PO_value', $_POST['Rad'], time() + 30 * 24 * 60 * 60);
-    setcookie('LI_value', $_POST['Limbs'], time() + 30 * 24 * 60 * 60);
-    if (count($_POST['SP'])==0) {
-        $noo = array();
-        setcookie('SP_value', serialize($noo), time() + 30 * 24 * 60 * 60);
-    } else {
-        setcookie('SP_value', serialize($_POST['SP']), time() + 30 * 24 * 60 * 60);
-    }
-    
-    if($errors) {
-        
-        header('Location: index.php');
-        
-        exit();
-    }
-    else {
-        setcookie('Name_error','',100000);
-        setcookie('Email_error','',100000);
-        setcookie('DD_error','',100000);
-        setcookie('DM_error','',100000);
-        setcookie('DY_error','',100000);
-        setcookie('SP_error','',100000);
-        setcookie('BG_error','',100000);
-        setcookie('CH_error','',100000);
-    }
-    $sp='';
-    for($i=0;$i<count($_POST['SP']);$i++){
-        $sp .= $_POST['SP'][$i] . '  ';
-    }
-    $user = 'u20236';
-    $pass = '8398991';
-    $db = new PDO('mysql:host=localhost;dbname=u20236', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
-    
-    try {
-        $stmt = $db->prepare("INSERT INTO formOne (NAME,EMAIL,YEAR,SEX,Nol,SUPERPOWERS,BIO,CHECKBOX) VALUES (:NAME,:EMAIL,:YEAR,:SEX,:NoL,:SUPERPOWERS,:BIO,:CHECKBOX)");
-        $stmt -> execute(array('NAME'=>$_POST['Name'], 'EMAIL'=>$_POST['Email'],'YEAR'=>$_POST['DY'],'SEX'=>$_POST['Rad'],'NoL'=>$_POST['Limbs'], 'SUPERPOWERS'=>$sp, 'BIO'=>$_POST['BG'], 'CHECKBOX'=>$ch));
-    }
-    catch(PDOException $e){
-        print('Error : ' . $e->getMessage());
-        exit();
-    }
-    setcookie('save','1');
+  }
+  if(count($abilities)>0){
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('powers_value', serialize($_POST['powers']), time() + 30 * 24 * 60 * 60);
+  }
+  }
+if(!isset($_POST['gender']))
+{
+    setcookie('gender_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}
+else if(intval($_POST['gender'])<0 || intval($_POST['gender'])>1)
+{
+    setcookie('gender_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}else {
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('gender_value', $_POST['gender'], time() + 30 * 24 * 60 * 60);
+  }
+
+if(empty($_POST['bodyparts']))
+{
+    setcookie('bodyparts_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}
+else if($_POST['bodyparts']<1 || $_POST['bodyparts']>4)
+{
+    setcookie('bodyparts_error', '1', time() + 24 * 60 * 60);
+    $erros = TRUE;
+}else {
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('bodyparts_value', $_POST['bodyparts'], time() + 30 * 24 * 60 * 60);
+  }
+if(empty($_POST['email'])){
+    setcookie('email_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}else if(!preg_match('/^.*\@.*\..+$/u', $_POST['email'])){
+    setcookie('email_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}else {
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('email_value', $_POST['email'], time() + 30 * 24 * 60 * 60);
+  }
+if(empty($_POST['agreed']))
+{
+    setcookie('agreed_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}else if($_POST['agreed']!=="on"){
+    setcookie('agreed_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+}else {
+    // Сохраняем ранее введенное в форму значение на месяц.
+    setcookie('agreed_value', $_POST['agreed'], time() + 30 * 24 * 60 * 60);
+  }
+  if ($errors) {
+    // При наличии ошибок перезагружаем страницу и завершаем работу скрипта.
     header('Location: index.php');
+    exit();
+  }
+  else {
+    // Удаляем Cookies с признаками ошибок.
+    setcookie('name_error', '', 100000);
+    setcookie('year_error', '', 100000);
+    setcookie('email_error', '', 100000);
+    setcookie('gender_error', '', 100000);
+    setcookie('bodyparts_error', '', 100000);
+    setcookie('bio_error', '', 100000);
+    setcookie('powers_error', '', 100000);
+    // TODO: тут необходимо удалить остальные Cookies.
+  }
+?>
+</div>
+</div>
+<?php
+$user = 'u20236';
+$pass = '8398991';
+$db = new PDO('mysql:host=localhost;dbname=u20236', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+try {
+$stmt = $db->prepare("INSERT INTO application (name, year, powers, bio, gender, email, bodyparts) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt->execute(array($_POST['name'], intval($year), implode(',',$_POST['powers']), $_POST['bio'], intval($_POST['gender']), $_POST['email'], intval($_POST['bodyparts'])));
+}
+catch(PDOException $e){
+  print('Error : ' . $e->getMessage());
+  exit();
+}
+
+  setcookie('save', '1');
+
+  // Делаем перенаправление.
+  header('Location: index.php');
 }
 ?>
+</body>
